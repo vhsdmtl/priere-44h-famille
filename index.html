@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>44 h de prière · Ministère de la Famille</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Fraunces:opsz,wght@9..144,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f6f4ef; --card:#fff; --ink:#1d1b18; --muted:#5f5a52; --line:#e4dfd5;
+    --accent:#2f4b8f; --accent-ink:#fff; --ok:#1f6b45; --warn:#8a3b12; --taken:#efece6;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Inter,system-ui,sans-serif}
+  main{max-width:760px;margin:0 auto;padding:40px 20px 80px}
+  .kicker{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600;margin:0}
+  h1{font-family:Fraunces,Georgia,serif;font-weight:600;font-size:clamp(30px,6vw,44px);line-height:1.1;margin:8px 0 12px}
+  .intro{color:var(--muted);margin:0 0 28px;max-width:60ch}
+  .banner{border:1px solid var(--line);background:#fff8e6;color:#6b4a00;padding:10px 14px;border-radius:10px;font-size:14px;margin-bottom:20px}
+  .day{margin:28px 0}
+  .day h2{font-size:18px;margin:0 0 4px}
+  .day p{margin:0 0 12px;color:var(--muted);font-size:14px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px}
+  .slot{display:flex;flex-direction:column;align-items:flex-start;gap:4px;text-align:left;width:100%;
+    min-height:76px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--card);
+    font:inherit;color:inherit;cursor:pointer;transition:border-color .15s, box-shadow .15s}
+  .slot:hover:not(:disabled){border-color:var(--accent);box-shadow:0 0 0 3px rgba(47,75,143,.12)}
+  .slot:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+  .slot .t{font-weight:600;font-size:17px}
+  .slot .s{font-size:14px;color:var(--ok);font-weight:500}
+  .slot.taken{background:var(--taken);cursor:default}
+  .slot.taken .s{color:var(--muted)}
+  .slot.mine{border-color:var(--ok);background:#eef6f0}
+  .slot.mine .s{color:var(--ok)}
+  .depts{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 4px}
+  .depts span{font-size:13px;padding:6px 12px;border-radius:999px;background:#fff;border:1px solid var(--line);color:var(--muted)}
+  .depts b{color:var(--ink);font-weight:600}
+  .slot .d{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+  .live{display:grid;grid-template-columns:1.4fr 1fr;gap:12px;margin:0 0 8px}
+  @media (max-width:620px){.live{grid-template-columns:1fr}}
+  .lcard{border-radius:16px;padding:20px 22px;background:var(--card);border:1px solid var(--line)}
+  .lcard.now{background:#1d2433;color:#f4f1ea;border-color:#1d2433}
+  .lcard .lab{font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:var(--muted);display:flex;align-items:center;gap:8px}
+  .lcard.now .lab{color:#8fe0b0}
+  .lcard .dot{width:9px;height:9px;border-radius:50%;background:#8fe0b0;animation:pulse 1.6s infinite}
+  @keyframes pulse{50%{opacity:.3}}
+  .lcard .who{font-family:Fraunces,Georgia,serif;font-size:clamp(28px,5vw,44px);line-height:1.1;margin:10px 0 6px;word-break:break-word}
+  .lcard.next .who{font-size:clamp(22px,3.5vw,30px)}
+  .lcard .meta{font-size:15px;color:var(--muted)}
+  .lcard.now .meta{color:#c9c4ba}
+  .lcard .dep{display:inline-block;margin-top:10px;padding:4px 11px;border-radius:999px;font-size:13px;border:1px solid var(--line);color:var(--accent)}
+  .lcard.now .dep{border-color:#3a4256;color:#e9b65c}
+  .lcard .vac{color:#c2552b}.lcard.now .vac{color:#ef8f6b}
+  .clock{font-variant-numeric:tabular-nums}
+  h2.sec{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:32px 0 12px}
+  .slot.live{border-color:#1f6b45;box-shadow:0 0 0 3px rgba(31,107,69,.18)}
+  .slot.past{opacity:.5}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin-top:8px}
+  .legend span::before{content:"";display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px;border:1px solid var(--line)}
+  .legend .l1::before{background:#fff}.legend .l2::before{background:var(--taken)}.legend .l3::before{background:#eef6f0;border-color:var(--ok)}
+  dialog{border:none;border-radius:16px;padding:0;max-width:420px;width:calc(100% - 32px);color:var(--ink)}
+  dialog::backdrop{background:rgba(20,18,15,.45)}
+  form{padding:24px;display:flex;flex-direction:column;gap:14px}
+  form h3{margin:0;font-size:20px}
+  form .sub{margin:-8px 0 4px;color:var(--muted);font-size:14px}
+  label{display:flex;flex-direction:column;gap:6px;font-size:14px;font-weight:500}
+  input,select{font:inherit;background:#fff;padding:11px 12px;border:1px solid #cfc8bb;border-radius:10px;min-height:44px}
+  input:focus,select:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
+  .row{display:flex;gap:10px;justify-content:flex-end;margin-top:6px}
+  .btn{font:inherit;font-weight:600;min-height:44px;padding:0 18px;border-radius:10px;border:1px solid var(--line);background:#fff;cursor:pointer}
+  .btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+  .btn.danger{color:var(--warn);border-color:#e2c3b3}
+  .btn:disabled{opacity:.6;cursor:wait}
+  .err{color:var(--warn);font-size:14px;margin:0;min-height:1em}
+  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 18px;border-radius:10px;font-size:15px;opacity:0;pointer-events:none;transition:opacity .2s;max-width:calc(100% - 32px)}
+  .toast.show{opacity:1}
+  footer{margin-top:40px;font-size:13px;color:var(--muted)}
+</style>
+</head>
+<body>
+<main>
+  <p class="kicker">Temps de prière de 44 heures · 25 – 27 novembre 2026</p>
+  <h1>Ministère de la Famille : qui dirige la prière</h1>
+  <p class="intro">Notre ministère dirige deux créneaux de 2 heures. Voyez en direct qui dirige la prière, puis choisissez une tranche de 30 minutes libre et indiquez votre nom et votre département. Une tranche prise disparaît aussitôt pour tout le monde, il n'y a donc pas de doublons.</p>
+  <div id="banner" class="banner" hidden></div>
+  <section class="live" aria-live="polite">
+    <div class="lcard now" id="now"></div>
+    <div class="lcard next" id="next"></div>
+  </section>
+  <h2 class="sec">Programme et inscriptions</h2>
+  <div id="depts" class="depts" aria-label="Inscriptions par département"></div>
+  <div id="days" aria-live="polite"></div>
+  <div class="legend"><span class="l1">Libre</span><span class="l2">Prise</span><span class="l3">Mon inscription</span></div>
+  <footer>Heures de Toronto (HNE). Un souci ? Contactez le responsable du Ministère de la Famille.</footer>
+</main>
+
+<dialog id="dlg">
+  <form id="frm" method="dialog">
+    <h3 id="dlgTitle">S'inscrire</h3>
+    <p class="sub" id="dlgSub"></p>
+    <label>Nom complet *<input name="nom" autocomplete="name" required minlength="2" maxlength="80"></label>
+    <label id="deptLabel">Département *<select name="departement">
+      <option value="">Choisir…</option>
+    </select></label>
+    <label>Téléphone<input name="telephone" type="tel" autocomplete="tel" maxlength="30"></label>
+    <label>Courriel<input name="courriel" type="email" autocomplete="email" maxlength="120"></label>
+    <p class="err" id="err"></p>
+    <div class="row">
+      <button type="button" class="btn" id="cancelDlg">Fermer</button>
+      <button type="submit" class="btn primary" id="okBtn">Confirmer</button>
+    </div>
+  </form>
+</dialog>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+/* ======= CONFIGURATION ======= */
+const API_URL = ''; // ← collez ici l'URL du déploiement Apps Script (se termine par /exec)
+const REFRESH_MS = 15000;
+/* ============================= */
+
+const DEPARTEMENTS = ['Leaman', 'Bloom', 'Ecodim', 'Kanegnon', 'Eden & couple d’honneur'];
+const TRANCHES_DEMO = [
+  { id: 'J-0800', jour: 'Jeudi 26 novembre',    debut: '08:00', fin: '08:30' },
+  { id: 'J-0830', jour: 'Jeudi 26 novembre',    debut: '08:30', fin: '09:00' },
+  { id: 'J-0900', jour: 'Jeudi 26 novembre',    debut: '09:00', fin: '09:30' },
+  { id: 'J-0930', jour: 'Jeudi 26 novembre',    debut: '09:30', fin: '10:00' },
+  { id: 'V-0000', jour: 'Vendredi 27 novembre', debut: '00:00', fin: '00:30' },
+  { id: 'V-0030', jour: 'Vendredi 27 novembre', debut: '00:30', fin: '01:00' },
+  { id: 'V-0100', jour: 'Vendredi 27 novembre', debut: '01:00', fin: '01:30' },
+  { id: 'V-0130', jour: 'Vendredi 27 novembre', debut: '01:30', fin: '02:00' },
+];
+const DAY_NOTES = {
+  'Jeudi 26 novembre': 'Créneau n° 6 · 8 h – 10 h',
+  'Vendredi 27 novembre': 'Créneau n° 14 · minuit – 2 h (nuit de jeudi à vendredi)',
+};
+
+const $ = s => document.querySelector(s);
+const store = {
+  get(k, d){ try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } },
+  set(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch {} },
+};
+let tranches = [];
+let mes = store.get('famille-mes-inscriptions', {}); // { trancheId: jeton }
+let current = null;
+
+/* ---- Mode démo (sans serveur) : tout reste dans ce navigateur ---- */
+const demo = {
+  load(){ return store.get('famille-demo', {}); },
+  etat(){ const d = this.load(); return TRANCHES_DEMO.map(t => ({...t, capacite:1, inscrits:(d[t.id]||[]).map(x=>({nom:x.nom, departement:x.departement, jeton:x.jeton.slice(0,6)}))})); },
+  post(p){
+    const d = this.load();
+    if (p.action === 'inscrire'){
+      if ((d[p.tranche]||[]).length >= 1) return {ok:false, conflit:true, erreur:'Désolé, cette tranche vient d’être prise.', tranches:this.etat()};
+      const jeton = crypto.randomUUID ? crypto.randomUUID() : String(Math.random()).slice(2);
+      const parts = p.nom.trim().split(/\s+/);
+      const nom = parts.length > 1 ? parts[0] + ' ' + parts.at(-1)[0].toUpperCase() + '.' : parts[0];
+      (d[p.tranche] ||= []).push({nom, departement:p.departement, jeton}); store.set('famille-demo', d);
+      return {ok:true, jeton, tranches:this.etat()};
+    }
+    d[p.tranche] = (d[p.tranche]||[]).filter(x => x.jeton !== p.jeton); store.set('famille-demo', d);
+    return {ok:true, tranches:this.etat()};
+  }
+};
+
+async function api(payload){
+  if (!API_URL) return payload ? demo.post(payload) : {ok:true, tranches:demo.etat()};
+  const opts = payload
+    ? { method:'POST', body: JSON.stringify(payload), headers:{'Content-Type':'text/plain;charset=utf-8'} }
+    : { method:'GET' };
+  const r = await fetch(API_URL, opts);
+  return r.json();
+}
+
+function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toast.h); toast.h=setTimeout(()=>t.classList.remove('show'),3500); }
+const h = s => s === '00:00' ? 'minuit' : s.replace(/^0/,'').replace(/:00$/,' h').replace(/:/,' h ');
+
+const DATES = { 'Jeudi 26 novembre': '2026-11-26', 'Vendredi 27 novembre': '2026-11-27' };
+const at = (jour, hhmm) => new Date(`${DATES[jour]}T${hhmm}:00-05:00`);
+const mk = (tag, cls, txt) => { const e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; };
+function carte(card, label, t, isLive){
+  const now = new Date(); card.textContent = '';
+  const lab = mk('div','lab'); if (isLive) lab.appendChild(mk('span','dot')); lab.append(label); card.appendChild(lab);
+  if (!t){
+    card.appendChild(mk('div','who','—'));
+    const first = tranches[0] && at(tranches[0].jour, tranches[0].debut);
+    card.appendChild(mk('div','meta', isLive ? (first && now < first ? 'Notre première tranche commence jeudi 26 novembre à 8 h.' : 'Pas de tranche du Ministère de la Famille en ce moment.') : 'Plus de tranche prévue.'));
+    return;
+  }
+  const n = t.inscrits.map(i=>i.nom).join(', ');
+  card.appendChild(mk('div','who' + (n ? '' : ' vac'), n || 'À pourvoir'));
+  let meta = `${t.jour} · ${h(t.debut)} – ${h(t.fin)}`;
+  const min = Math.round((at(t.jour,t.debut) - now)/60000);
+  if (!isLive && min > 0) meta += min < 60 ? ` · dans ${min} min` : min < 1440 ? ` · dans ${Math.floor(min/60)} h ${String(min%60).padStart(2,'0')}` : '';
+  card.appendChild(mk('div','meta',meta));
+  const d = t.inscrits.map(i=>i.departement).filter(Boolean).join(', ');
+  if (d) card.appendChild(mk('span','dep',d));
+}
+function renderLive(){
+  const now = new Date();
+  const live = tranches.find(t => at(t.jour,t.debut) <= now && now < at(t.jour,t.fin));
+  const next = tranches.find(t => at(t.jour,t.debut) > now);
+  carte($('#now'), 'En ce moment', live, true);
+  carte($('#next'), live ? 'Ensuite' : 'Prochaine tranche', next, false);
+  return live;
+}
+
+function render(){
+  const liveT = renderLive();
+  const byDay = {};
+  tranches.forEach(t => (byDay[t.jour] ||= []).push(t));
+  const wrap = $('#days'); wrap.textContent = '';
+  for (const [jour, list] of Object.entries(byDay)){
+    const sec = document.createElement('section'); sec.className='day';
+    const libres = list.filter(t => t.inscrits.length < t.capacite).length;
+    sec.innerHTML = `<h2></h2><p></p><div class="grid"></div>`;
+    sec.querySelector('h2').textContent = jour;
+    sec.querySelector('p').textContent = (DAY_NOTES[jour]||'') + ` · ${libres} tranche${libres>1?'s':''} libre${libres>1?'s':''} sur ${list.length}`;
+    const grid = sec.querySelector('.grid');
+    list.forEach(t => {
+      const b = document.createElement('button'); b.type='button'; b.className='slot';
+      const mine = mes[t.id] && t.inscrits.some(i => i.jeton === mes[t.id].slice(0,6));
+      const full = t.inscrits.length >= t.capacite;
+      const isPast = at(t.jour, t.fin) <= new Date();
+      if (t === liveT) b.classList.add('live'); else if (isPast) b.classList.add('past');
+      const label = `${h(t.debut)} – ${h(t.fin)}`;
+      let status = 'Libre · s’inscrire';
+      if (mine){ b.classList.add('mine'); status = 'Vous ✓ · annuler'; }
+      else if (isPast && !full){ b.disabled = true; status = 'Terminée'; }
+      else if (full){ b.classList.add('taken'); b.disabled = true; status = t.inscrits.map(i=>i.nom).join(', '); }
+      const depts = t.inscrits.map(i=>i.departement).filter(Boolean).join(', ');
+      b.innerHTML = `<span class="t"></span><span class="s"></span><span class="d"></span>`;
+      b.querySelector('.d').textContent = depts;
+      b.querySelector('.t').textContent = label;
+      b.querySelector('.s').textContent = status;
+      b.setAttribute('aria-label', `${jour}, ${label} : ${mine ? 'votre inscription, cliquer pour annuler' : full ? 'prise par ' + status + (depts ? ', ' + depts : '') : 'libre'}`);
+      b.onclick = () => mine ? annuler(t) : ouvrir(t);
+      grid.appendChild(b);
+    });
+    wrap.appendChild(sec);
+  }
+  const cnt = Object.fromEntries(DEPARTEMENTS.map(d => [d, 0]));
+  tranches.forEach(t => t.inscrits.forEach(i => { if (i.departement in cnt) cnt[i.departement]++; }));
+  const dw = $('#depts'); if (!dw) return liveT; dw.textContent = '';
+  DEPARTEMENTS.forEach(d => { const s = document.createElement('span'); s.innerHTML = '<b></b> · '; s.querySelector('b').textContent = d; s.append(cnt[d] + ' inscrit' + (cnt[d] > 1 ? 's' : '')); dw.appendChild(s); });
+}
+
+async function refresh(){
+  try { const r = await api(); if (r.ok){ tranches = r.tranches; render(); } }
+  catch(e){ $('#banner').hidden=false; $('#banner').textContent='Connexion au serveur impossible pour le moment. Réessayez dans un instant.'; }
+}
+
+function ouvrir(t){
+  current = t;
+  $('#dlgTitle').textContent = 'S’inscrire';
+  $('#dlgSub').textContent = `${t.jour} · ${h(t.debut)} – ${h(t.fin)}`;
+  $('#err').textContent = '';
+  const saved = store.get('famille-profil', {});
+  for (const k of ['nom','departement','telephone','courriel']) if ($('#frm').elements[k]) $('#frm').elements[k].value = saved[k] || '';
+  $('#dlg').showModal();
+}
+
+$('#cancelDlg').onclick = () => $('#dlg').close();
+$('#frm').addEventListener('submit', async ev => {
+  ev.preventDefault();
+  const f = ev.target.elements;
+  const data = { nom:f.nom.value.trim(), departement:f.departement ? f.departement.value : '', telephone:f.telephone.value.trim(), courriel:f.courriel.value.trim() };
+  if (data.nom.length < 2){ $('#err').textContent='Veuillez indiquer votre nom.'; return; }
+  if (DEPARTEMENTS.length && !DEPARTEMENTS.includes(data.departement)){ $('#err').textContent='Veuillez choisir votre département.'; return; }
+  $('#okBtn').disabled = true; $('#err').textContent='';
+  try {
+    const r = await api({ action:'inscrire', tranche:current.id, ...data });
+    if (r.tranches){ tranches = r.tranches; }
+    if (r.ok){
+      mes[current.id] = r.jeton; store.set('famille-mes-inscriptions', mes); store.set('famille-profil', data);
+      $('#dlg').close(); render(); toast(`Merci ${data.nom.split(' ')[0]} ! Inscription confirmée.`);
+    } else {
+      $('#err').textContent = r.erreur || 'Une erreur est survenue.';
+      render();
+    }
+  } catch(e){ $('#err').textContent = 'Connexion impossible. Réessayez.'; }
+  finally { $('#okBtn').disabled = false; }
+});
+
+async function annuler(t){
+  if (!confirmAnnuler(t)) return;
+  try {
+    const r = await api({ action:'annuler', tranche:t.id, jeton:mes[t.id] });
+    if (r.tranches) tranches = r.tranches;
+    if (r.ok){ delete mes[t.id]; store.set('famille-mes-inscriptions', mes); toast('Inscription annulée.'); }
+    else toast(r.erreur || 'Annulation impossible.');
+    render();
+  } catch(e){ toast('Connexion impossible. Réessayez.'); }
+}
+// Confirmation dans la page (pas de fenêtre système)
+function confirmAnnuler(t){ return window.__confirmed === t.id ? (window.__confirmed=null, true) : (window.__confirmed=t.id, toast('Touchez à nouveau pour confirmer l’annulation.'), false); }
+
+if (!API_URL){ const b=$('#banner'); b.hidden=false; b.textContent='Mode démonstration : les inscriptions restent dans ce navigateur. Ajoutez l’URL Apps Script pour activer le partage en ligne.'; }
+if (!DEPARTEMENTS.length){ $('#deptLabel').remove(); $('#depts').remove(); }
+DEPARTEMENTS.forEach(d => { const o = document.createElement('option'); o.value = o.textContent = d; $('#frm').elements.departement.appendChild(o); });
+refresh();
+setInterval(() => { if (!$('#dlg').open) refresh(); }, REFRESH_MS);
+setInterval(() => { if (tranches.length && !$('#dlg').open) render(); }, 30000);
+document.addEventListener('visibilitychange', () => { if (!document.hidden) refresh(); });
+</script>
+</body>
+</html>
